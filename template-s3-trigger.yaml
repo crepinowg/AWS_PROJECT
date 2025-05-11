@@ -14,18 +14,26 @@ Parameters:
     Default: "vpc-0b5f3f9b482b7b7a4"
 
 Resources:
-  MyEC2Instance:
+  MyEC2Instance: 
     Type: AWS::EC2::Instance
-    Properties:
-      ImageId: "ami-0160e8d70ebc43ee1"
+    Properties: 
+      ImageId: "ami-00e5d97115c79bf56"  # Ubuntu 22.04 (vérifie qu'elle est disponible dans ta région)
       InstanceType: t2.micro
       KeyName: "iabdkey"
       SubnetId: subnet-0a230d78bf307974b
       SecurityGroupIds:
-        - sg-07755faad1dff43b3
-      BlockDeviceMappings:
+        - sg-00d58283a8103e447
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update -y
+          apt-get install -y git
+          cd /home/ubuntu
+          git clone git@github.com/crepinowg/AWS_PROJECT.git
+          chown -R ubuntu:ubuntu /home/ubuntu/AWS_PROJECT.git
+      BlockDeviceMappings: 
         - DeviceName: "/dev/sdm"
-          Ebs:
+          Ebs: 
             VolumeType: "io1"
             Iops: 200
             DeleteOnTermination: true
